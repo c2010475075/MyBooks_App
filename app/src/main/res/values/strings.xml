@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MyBooks</string>
+    <string name="add_book">Add a Book</string>
+    <string name="enter_book_title">Enter title</string>
+    <string name="enter_book_year">Enter year</string>
+    <string name="enter_author">Enter Author</string>
+    <string name="enter_ISBN">Enter ISBN</string>
+    <string name="add">Add</string>
+    <string name="title_required">Title is required.</string>
+    <string name="year_required">Year is required.</string>
+    <string name="author_required">Author is required.</string>
+    <string name="ISBN_required">ISBN is required.</string>
+</resources>
