@@ -32,7 +32,7 @@ object Validator {
 
         return ValidationResult(result)
     }
-  
+
 }
 
 data class ValidationResult(
