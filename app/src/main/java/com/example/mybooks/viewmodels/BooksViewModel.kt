@@ -1,6 +1,8 @@
 package com.example.mybooks.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.update
 class BooksViewModel: ViewModel() {
     private val _bookListState = MutableStateFlow(listOf<Book>())
     val bookListState: StateFlow<List<Book>> = _bookListState.asStateFlow()
+
 
     var bookUiState by mutableStateOf(AddBookUiState())
         private set
@@ -69,5 +72,10 @@ class BooksViewModel: ViewModel() {
             list.add(book)
             list
         }
+    }
+    private var books = mutableStateListOf<Book>()
+    fun removeBook(book: Book){
+       // Log.d("delete",book.title)
+        books.remove(book)
     }
 }

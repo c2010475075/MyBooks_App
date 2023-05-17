@@ -79,7 +79,7 @@ fun BookBody(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        MovieInputForm(bookUiState = bookUiState, onMovieValueChange = onBookValueChange)
+        BookInputForm(bookUiState = bookUiState, onBookValueChange = onBookValueChange)
 
         Button(
             enabled = bookUiState.actionEnabled,
@@ -91,9 +91,9 @@ fun BookBody(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieInputForm(
+fun BookInputForm(
     bookUiState: AddBookUiState,
-    onMovieValueChange: (AddBookUiState, AddBookUIEvent) -> Unit,
+    onBookValueChange: (AddBookUiState, AddBookUIEvent) -> Unit,
 ){
     SimpleTextField(
         value = bookUiState.title,
@@ -101,7 +101,7 @@ fun MovieInputForm(
         isError = bookUiState.titleErr,
         errMsg = stringResource(id = R.string.title_required)
     ) { input ->
-        onMovieValueChange(bookUiState.copy(title = input), AddBookUIEvent.TitleChanged)
+        onBookValueChange(bookUiState.copy(title = input), AddBookUIEvent.TitleChanged)
     }
 
     SimpleTextField(
@@ -109,8 +109,8 @@ fun MovieInputForm(
         label = stringResource(id = R.string.enter_book_year),
         errMsg = stringResource(id = R.string.year_required),
         isError = bookUiState.yearErr
-    ) { //input ->
-        onMovieValueChange(bookUiState.copy(year = 0), AddBookUIEvent.YearChanged)
+    ) { input ->
+        onBookValueChange(bookUiState.copy(year = input.toInt()), AddBookUIEvent.YearChanged)
     }
 
     SimpleTextField(
@@ -119,19 +119,19 @@ fun MovieInputForm(
         errMsg = stringResource(id = R.string.author_required),
         isError = bookUiState.authorErr,
     ) { input ->
-        onMovieValueChange(
+        onBookValueChange(
             bookUiState.copy(author = input),
             AddBookUIEvent.AuthorChanged
         )
     }
+SimpleTextField(
 
-    SimpleTextField(
         value = bookUiState.isbn,
         label = stringResource(R.string.enter_ISBN),
         errMsg = stringResource(id = R.string.ISBN_required),
         isError = bookUiState.isbnErr,
-    ) { input ->
-        onMovieValueChange(
+    ) { input->
+         onBookValueChange(
             bookUiState.copy(isbn = input),
             AddBookUIEvent.ISBNChanged
         )

@@ -11,10 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,15 +25,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybooks.models.Book
 import com.example.mybooks.models.getBooks
 import com.example.mybooks.ui.theme.Shapes
+import com.example.mybooks.viewmodels.BooksViewModel
 
 @Preview
 @Composable
 fun BookRow(
     book: Book = getBooks()[0],
     modifier: Modifier = Modifier,
+    onRead: (Book) -> Unit = {},
 ) {
     Card(modifier = modifier
         .fillMaxWidth()
@@ -46,11 +46,12 @@ fun BookRow(
     ) {
         Column {
             Box(modifier = Modifier
-                .height(150.dp)
+                .height(50.dp)
                 .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                DoneIcon()
+               // DeleteIcon(book)
+                DoneIcon(book, onRead)
             }
 
             BookDetails(modifier = Modifier.padding(12.dp), book = book)
@@ -60,18 +61,42 @@ fun BookRow(
 
 
 @Composable
-fun DoneIcon() {
+fun DoneIcon(book: Book, onRead: (Book) -> Unit  ) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(10.dp),
         contentAlignment = Alignment.TopEnd
     ){
-        Icon(
-            tint = MaterialTheme.colors.secondary,
+        Icon(modifier = Modifier.clickable {
+            book.bookIsRead =! book.bookIsRead
+        },
+
+            tint = if(book.bookIsRead) {
+                Color.Blue
+            } else {
+                Color.LightGray
+            },
             imageVector = Icons.Default.Done,
             contentDescription = "book already read")
+
+
     }
 }
+/*@Composable
+fun DeleteIcon(book: Book,bookViewModel: BooksViewModel = viewModel() ) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(10.dp),
+        contentAlignment = Alignment.TopStart
+    ){
+        IconButton(onClick = { bookViewModel.removeBook(book) }){
+
+            Icon(imageVector = Icons.Default.Delete, contentDescription = "delete book")
+
+            }
+        }
+    }
+*/
 
 
 @Composable
@@ -85,18 +110,28 @@ fun BookDetails(modifier: Modifier = Modifier, book: Book) {
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            book.title,
-            modifier = Modifier.weight(6f),
-            style = MaterialTheme.typography.h6
-        )
+
+            Text(
+                book.title,
+                modifier = Modifier.weight(6f),
+                style = MaterialTheme.typography.h6
+            )
+
+            Text(
+                book.author,
+                modifier = Modifier.weight(6f),
+                style = MaterialTheme.typography.h6
+            )
+
+
+
 
         IconButton(
             modifier = Modifier.weight(1f),
-            onClick = { expanded = !expanded }) {
+            onClick = { expanded =!expanded }) {
             Icon(imageVector =
-            if (expanded) Icons.Filled.KeyboardArrowDown
-            else Icons.Filled.KeyboardArrowUp,
+            if (expanded) Icons.Filled.KeyboardArrowUp
+            else Icons.Filled.KeyboardArrowDown,
                 contentDescription = "expand",
                 modifier = Modifier
                     .size(25.dp),
@@ -111,9 +146,9 @@ fun BookDetails(modifier: Modifier = Modifier, book: Book) {
         exit = fadeOut()
     ) {
         Column (modifier = modifier) {
-            Text(text = "Author: ${book.author}", style = MaterialTheme.typography.caption)
+            val newValue = "${book.isbn[0]}${book.isbn[1]}${book.isbn[2]}-${book.isbn[3]}-${book.isbn[4]}${book.isbn[5]}${book.isbn[6]}-${book.isbn[7]}${book.isbn[8]}${book.isbn[9]}${book.isbn[10]}${book.isbn[11]}-${book.isbn[12]}"
             Text(text = "Released: ${book.year}", style = MaterialTheme.typography.caption)
-            Text(text = "ISBN: ${book.isbn}", style = MaterialTheme.typography.caption)
+            Text(text = "ISBN: $newValue", style = MaterialTheme.typography.caption)
 
             Divider(modifier = Modifier.padding(3.dp))
 

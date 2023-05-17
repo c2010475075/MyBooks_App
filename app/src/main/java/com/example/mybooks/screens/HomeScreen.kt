@@ -7,6 +7,8 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -23,7 +25,7 @@ fun HomeScreen(navController: NavController = rememberNavController(), booksView
         HomeTopAppBar(
             title = "Home",
             menuContent = {
-                DropdownMenuItem(onClick = { /*navController.navigate(Screen.FavoriteScreen.route) */}) {
+                DropdownMenuItem(onClick = { navController.navigate(Screen.AddBookScreen.route) }) {
                     Row {
                         Text(text = "New Book", modifier = Modifier
                             .width(100.dp)
@@ -33,20 +35,23 @@ fun HomeScreen(navController: NavController = rememberNavController(), booksView
             }
         )
     }) { padding ->
-        MainContent(modifier = Modifier.padding(padding), navController = navController)
+        MainContent(modifier = Modifier.padding(padding),
+            navController = navController,
+            viewModel = booksViewModel)
     }
 }
 
 @Composable
 fun MainContent(
     modifier: Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: BooksViewModel
 ) {
-    val books = getBooks()
+
     BookList(
         modifier = modifier,
         navController = navController,
-        books = books
+        viewModel = viewModel
     )
 }
 
@@ -54,17 +59,36 @@ fun MainContent(
 fun BookList(
     modifier: Modifier = Modifier,
     navController: NavController,
-    books: List<Book> = getBooks()
+    viewModel: BooksViewModel
 ) {
+    val bookListState by viewModel.bookListState.collectAsState()
+
+    /*
     LazyColumn (
         modifier = modifier,
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(books) { book ->
-            BookRow(
-                book = book
-            )
+        items(items = bookListState) {bookItem -> BookRow(book = bookItem)
+            //else Text(text = "Es wurden noch keine Bücher angelegt !!!!")
+ 
+        }
+    }*/
+    val items = bookListState // Your list of items
+
+    LazyColumn {
+        if (items.isEmpty()) {
+            item {
+                Text(
+                    text = "List is empty",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        } else {
+            items(items) {bookItem -> BookRow(book = bookItem)
+            }
         }
     }
 }
