@@ -50,7 +50,7 @@ fun BookRow(
                 .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-               // DeleteIcon(book)
+               //DeleteIcon(book)
                 DoneIcon(book, onRead)
             }
 
@@ -67,11 +67,9 @@ fun DoneIcon(book: Book, onRead: (Book) -> Unit  ) {
         .padding(10.dp),
         contentAlignment = Alignment.TopEnd
     ){
-        Icon(modifier = Modifier.clickable {
-            book.bookIsRead =! book.bookIsRead
-        },
+        Icon(modifier = Modifier.clickable { onRead(book) },
 
-            tint = if(book.bookIsRead) {
+            tint = if(book.isRead) {
                 Color.Blue
             } else {
                 Color.LightGray
@@ -82,21 +80,21 @@ fun DoneIcon(book: Book, onRead: (Book) -> Unit  ) {
 
     }
 }
-/*@Composable
+@Composable
 fun DeleteIcon(book: Book,bookViewModel: BooksViewModel = viewModel() ) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(10.dp),
         contentAlignment = Alignment.TopStart
     ){
-        IconButton(onClick = { bookViewModel.removeBook(book) }){
+        IconButton(onClick = { /*TODO*/ }){
 
             Icon(imageVector = Icons.Default.Delete, contentDescription = "delete book")
 
             }
         }
     }
-*/
+
 
 
 @Composable
@@ -118,7 +116,7 @@ fun BookDetails(modifier: Modifier = Modifier, book: Book) {
             )
 
             Text(
-                book.author,
+                "Author: " + book.author,
                 modifier = Modifier.weight(6f),
                 style = MaterialTheme.typography.h6
             )

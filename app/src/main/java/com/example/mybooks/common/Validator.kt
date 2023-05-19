@@ -1,5 +1,6 @@
 package com.example.mybooks.common
 
+import android.annotation.SuppressLint
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -20,7 +21,8 @@ object Validator {
         return ValidationResult(author.isNotBlank())
     }
 //    public static boolean isValidISBNCode(String str)
-    fun validateBookIsbn(isbn: String): ValidationResult {
+@SuppressLint("SuspiciousIndentation")
+fun validateBookIsbn(isbn: String): ValidationResult {
         // Regex to check valid ISBN Code
     //"^(?=(?:[^0-9]*[0-9]){10}(?:(?:[^0-9]*[0-9]){3})?$)[\\d-]+$"  for 10 or 13 digit isbn
         val regex = "^(?=(?:[^0-9]*[0-9]){13}$)[\\d-]+$"

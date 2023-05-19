@@ -9,18 +9,28 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.mybooks.common.InjectorUtils
 import com.example.mybooks.models.Book
 import com.example.mybooks.models.getBooks
 import com.example.mybooks.viewmodels.BooksViewModel
 import com.example.mybooks.widgets.BookRow
 import com.example.mybooks.widgets.HomeTopAppBar
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController = rememberNavController(), booksViewModel: BooksViewModel){
+fun HomeScreen(navController: NavController = rememberNavController()){
+
+    val viewModel: BooksViewModel = viewModel(factory = InjectorUtils.provideBooksViewModelFactory(
+        LocalContext.current))
+
     Scaffold(topBar = {
         HomeTopAppBar(
             title = "Home",
@@ -36,21 +46,17 @@ fun HomeScreen(navController: NavController = rememberNavController(), booksView
         )
     }) { padding ->
         MainContent(modifier = Modifier.padding(padding),
-            navController = navController,
-            viewModel = booksViewModel)
+            viewModel = viewModel)
     }
 }
 
 @Composable
 fun MainContent(
     modifier: Modifier,
-    navController: NavController,
     viewModel: BooksViewModel
 ) {
-
     BookList(
         modifier = modifier,
-        navController = navController,
         viewModel = viewModel
     )
 }
@@ -58,22 +64,10 @@ fun MainContent(
 @Composable
 fun BookList(
     modifier: Modifier = Modifier,
-    navController: NavController,
     viewModel: BooksViewModel
 ) {
     val bookListState by viewModel.bookListState.collectAsState()
-
-    /*
-    LazyColumn (
-        modifier = modifier,
-        contentPadding = PaddingValues(all = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        items(items = bookListState) {bookItem -> BookRow(book = bookItem)
-            //else Text(text = "Es wurden noch keine Bücher angelegt !!!!")
- 
-        }
-    }*/
+    val coroutineScope = rememberCoroutineScope()
     val items = bookListState // Your list of items
 
     LazyColumn {
@@ -87,7 +81,8 @@ fun BookList(
                 )
             }
         } else {
-            items(items) {bookItem -> BookRow(book = bookItem)
+            items(items) {bookItem -> BookRow(book = bookItem,  onRead  = { book ->
+                coroutineScope.launch{ viewModel.updateReadBooks(book) }})
             }
         }
     }

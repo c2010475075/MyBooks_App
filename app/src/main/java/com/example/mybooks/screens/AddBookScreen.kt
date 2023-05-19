@@ -9,20 +9,27 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.mybooks.viewmodels.BooksViewModel
 import com.example.mybooks.R
+import com.example.mybooks.common.InjectorUtils
+import com.example.mybooks.viewmodels.AddBookViewModel
 import com.example.mybooks.widgets.SimpleTextField
 import com.example.mybooks.widgets.SimpleTopAppBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddBookScreen(
     navController: NavController,
-    booksViewModel: BooksViewModel
+
 ){
     val scaffoldState = rememberScaffoldState()
+    val viewModel: AddBookViewModel = viewModel(factory = InjectorUtils.provideAddBookViewModelFactory(
+        LocalContext.current))
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -34,7 +41,7 @@ fun AddBookScreen(
     ) { padding ->
         MainContent(
             Modifier.padding(padding),
-            booksViewModel = booksViewModel,
+            booksViewModel = viewModel,
             navController = navController
         )
     }
@@ -43,9 +50,10 @@ fun AddBookScreen(
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
-    booksViewModel: BooksViewModel,
+    booksViewModel: AddBookViewModel,
     navController: NavController
 ) {
+
     val coroutineScope = rememberCoroutineScope()
 
     Surface(
@@ -59,8 +67,10 @@ fun MainContent(
             bookUiState = booksViewModel.bookUiState,
             onBookValueChange = { newUiState, event -> booksViewModel.updateUIState(newUiState, event)},
             onSaveClick = {
-                booksViewModel.saveBook()
-                navController.navigate(Screen.MainScreen.route)
+                coroutineScope.launch {
+                    booksViewModel.saveBook()
+                    navController.navigate(Screen.MainScreen.route)
+                }
             }
         )
     }

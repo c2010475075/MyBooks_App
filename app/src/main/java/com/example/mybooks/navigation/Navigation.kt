@@ -8,24 +8,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mybooks.screens.*
+import com.example.mybooks.viewmodels.AddBookViewModel
 import com.example.mybooks.viewmodels.BooksViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
 
-    // inside a composable
-    val bookViewModel: BooksViewModel = viewModel()
-
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
         composable(route = Screen.MainScreen.route){
-            HomeScreen(navController = navController, booksViewModel = bookViewModel)
+            HomeScreen(navController = navController)
         }
 
 
         
         composable(Screen.AddBookScreen.route) {
-            AddBookScreen(navController = navController, booksViewModel = bookViewModel)
+            AddBookScreen(navController = navController)
         }
 
 
