@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.mybooks.common.Validator
-import com.example.mybooks.models.Book
 import com.example.mybooks.repositories.BookRepository
 import com.example.mybooks.screens.AddBookUiState
 import com.example.mybooks.screens.AddBookUIEvent

@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.mybooks.viewmodels.BooksViewModel
 import com.example.mybooks.R
 import com.example.mybooks.common.InjectorUtils
 import com.example.mybooks.viewmodels.AddBookViewModel

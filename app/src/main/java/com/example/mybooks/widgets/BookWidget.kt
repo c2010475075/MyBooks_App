@@ -7,8 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -16,25 +14,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mybooks.models.Book
-import com.example.mybooks.models.getBooks
 import com.example.mybooks.ui.theme.Shapes
 import com.example.mybooks.viewmodels.BooksViewModel
+import kotlinx.coroutines.launch
 
-@Preview
+
 @Composable
 fun BookRow(
-    book: Book = getBooks()[0],
+    book: Book,
     modifier: Modifier = Modifier,
     onRead: (Book) -> Unit = {},
 ) {
@@ -44,7 +34,7 @@ fun BookRow(
         shape = Shapes.large,
         elevation = 10.dp
     ) {
-        Column {
+        Column ( horizontalAlignment = Alignment.CenterHorizontally){
             Box(modifier = Modifier
                 .height(50.dp)
                 .fillMaxWidth(),
@@ -52,6 +42,12 @@ fun BookRow(
             ) {
                //DeleteIcon(book)
                 DoneIcon(book, onRead)
+                DeleteIcon(book)
+                IconButton(onClick = { }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "edit book")
+                }
+
+
             }
 
             BookDetails(modifier = Modifier.padding(12.dp), book = book)
@@ -82,12 +78,13 @@ fun DoneIcon(book: Book, onRead: (Book) -> Unit  ) {
 }
 @Composable
 fun DeleteIcon(book: Book,bookViewModel: BooksViewModel = viewModel() ) {
+    val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(10.dp),
         contentAlignment = Alignment.TopStart
     ){
-        IconButton(onClick = { /*TODO*/ }){
+        IconButton(onClick = { coroutineScope.launch {bookViewModel.deleteBook(book) }}){
 
             Icon(imageVector = Icons.Default.Delete, contentDescription = "delete book")
 

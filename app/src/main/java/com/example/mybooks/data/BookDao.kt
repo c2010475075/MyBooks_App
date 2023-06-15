@@ -9,12 +9,14 @@ interface BookDao {
 
     @Insert
     suspend fun add(book : Book)
+    @Query("SELECT * FROM book WHERE lower(isbn) LIKE lower(:query) OR lower(author) LIKE lower(:query)")
+    fun searchBooks(query: String): Flow<List<Book>>
 
     @Update
     suspend fun update(book : Book)
 
     @Delete
-    fun delete(book : Book)
+    suspend fun deleteBook(book : Book)
 
     @Query("SELECT * from book")
     fun getAll(): Flow<List<Book>>
