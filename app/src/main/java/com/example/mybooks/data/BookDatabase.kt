@@ -12,7 +12,7 @@ import androidx.work.WorkManager
 import com.example.mybooks.models.Book
 import com.example.mybooks.utils.CustomConverters
 import com.example.mybooks.workers.SeedDatabaseWorker
-
+//hilfe von einer Kollegin
 @Database(
     entities = [Book::class],  // tables in the db
     version = 1,                // version of db schema
